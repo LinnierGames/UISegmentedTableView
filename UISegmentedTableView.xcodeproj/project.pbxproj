@@ -10,6 +10,8 @@
 		E93D0C4F20A141C4009C30C2 /* UISegmentedTableView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E93D0C4520A141C3009C30C2 /* UISegmentedTableView.framework */; };
 		E93D0C5420A141C4009C30C2 /* UISegmentedTableViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93D0C5320A141C4009C30C2 /* UISegmentedTableViewTests.swift */; };
 		E93D0C5620A141C4009C30C2 /* UISegmentedTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = E93D0C4820A141C4009C30C2 /* UISegmentedTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E93D0C6120A141DE009C30C2 /* UISegmentedTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93D0C5F20A141DE009C30C2 /* UISegmentedTableView.swift */; };
+		E93D0C6220A141DE009C30C2 /* UISegmentedTableViewTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93D0C6020A141DE009C30C2 /* UISegmentedTableViewTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,8 @@
 		E93D0C4E20A141C4009C30C2 /* UISegmentedTableViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UISegmentedTableViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93D0C5320A141C4009C30C2 /* UISegmentedTableViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISegmentedTableViewTests.swift; sourceTree = "<group>"; };
 		E93D0C5520A141C4009C30C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E93D0C5F20A141DE009C30C2 /* UISegmentedTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISegmentedTableView.swift; sourceTree = "<group>"; };
+		E93D0C6020A141DE009C30C2 /* UISegmentedTableViewTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UISegmentedTableViewTabView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,8 @@
 			isa = PBXGroup;
 			children = (
 				E93D0C4820A141C4009C30C2 /* UISegmentedTableView.h */,
+				E93D0C5F20A141DE009C30C2 /* UISegmentedTableView.swift */,
+				E93D0C6020A141DE009C30C2 /* UISegmentedTableViewTabView.swift */,
 				E93D0C4920A141C4009C30C2 /* Info.plist */,
 			);
 			path = UISegmentedTableView;
@@ -148,6 +154,7 @@
 				TargetAttributes = {
 					E93D0C4420A141C3009C30C2 = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 0930;
 					};
 					E93D0C4D20A141C4009C30C2 = {
 						CreatedOnToolsVersion = 9.3;
@@ -194,6 +201,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E93D0C6120A141DE009C30C2 /* UISegmentedTableView.swift in Sources */,
+				E93D0C6220A141DE009C30C2 /* UISegmentedTableViewTabView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,6 +348,7 @@
 		E93D0C5A20A141C4009C30C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -356,6 +366,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.linniergames.UISegmentedTableView;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -364,6 +375,7 @@
 		E93D0C5B20A141C4009C30C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -389,6 +401,7 @@
 		E93D0C5D20A141C4009C30C2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8U3L6K9JA6;
 				INFOPLIST_FILE = UISegmentedTableViewTests/Info.plist;
@@ -407,6 +420,7 @@
 		E93D0C5E20A141C4009C30C2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8U3L6K9JA6;
 				INFOPLIST_FILE = UISegmentedTableViewTests/Info.plist;
