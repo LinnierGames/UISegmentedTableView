@@ -203,6 +203,11 @@ public class UISegmentedTableView: UIView {
         
         tableView.dataSource = self.tableDataSource ?? self // allows the user to use either UITableViewDataSource or the limited supported methods in UISegmentedTableViewDataSource
         tableView.delegate = self.tableDelegate ?? self
+        
+        superviewStackView.addArrangedSubview(tableView)
+        
+        superviewStackView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(superviewStackView)
     }
     
     public func reloadData() {
@@ -260,13 +265,10 @@ public class UISegmentedTableView: UIView {
         //store tab buttons
         self.tabButtons = tabsStackView.subviews as! [UISegmentedTableViewTabView]
         
+//        self.tabsStackView.isHidden = self.tabButtons.count == 0 //hide tabs stack view if no tabs buttons
+        
         //layout table
         tableView.reloadData()
-        
-        superviewStackView.addArrangedSubview(tableView)
-        
-        superviewStackView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(superviewStackView)
     }
     
     public func reloadTableView() {
