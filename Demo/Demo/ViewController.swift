@@ -11,7 +11,6 @@ import UISegmentedTableView
 
 class ViewController: UIViewController, UISegmentedTableViewDataSource {
     
-    
     private var segmentTitles = ["Today", "Next 7 Days", "No Deadlines"]
     
     private var contents = [
@@ -25,11 +24,6 @@ class ViewController: UIViewController, UISegmentedTableViewDataSource {
             "Today"
         ],
         [
-            "7 Days",
-            "7 Days",
-            "7 Days",
-            "7 Days",
-            "7 Days"
         ],
         [
             "No Deadline",
@@ -65,7 +59,11 @@ class ViewController: UIViewController, UISegmentedTableViewDataSource {
     // MARK: - RETURN VALUES
     
     func numberOfSegments(in segmentedTableView: UISegmentedTableView) -> Int {
-        return segmentTitles.count
+        if segmentControl.selectedSegmentIndex == 0 {
+            return segmentTitles.count
+        } else {
+            return 0
+        }
     }
     
     func segmentedTableView(_ segmentedTableView: UISegmentedTableView, titleFor segmentIndex: Int) -> String {
@@ -76,11 +74,6 @@ class ViewController: UIViewController, UISegmentedTableViewDataSource {
     
     private var tabContents = [
         [
-            "Overdue",
-            "Overdue",
-            "Overdue",
-            "Overdue",
-            "Overdue"
         ],
         [
             "Copmleted",
@@ -90,7 +83,11 @@ class ViewController: UIViewController, UISegmentedTableViewDataSource {
     ]
     
     func numberOfTabs(in segmentedTableView: UISegmentedTableView) -> Int {
-        return tabIcons.count
+        if segmentControl.selectedSegmentIndex == 0 {
+            return tabIcons.count
+        } else {
+            return 0
+        }
     }
     
     func segmentedTableView(_ segmentedTableView: UISegmentedTableView, tabFor index: Int) -> UISegmentedTableViewTabView {
@@ -104,16 +101,16 @@ class ViewController: UIViewController, UISegmentedTableViewDataSource {
         return tab
     }
     
-    func segmentedTableView(_ segmentedTableView: UISegmentedTableView, numberOfSectionsIn tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func segmentedTableView(_ segmentedTableView: UISegmentedTableView, tableView: UITableView, numberOfRowsIn section: Int) -> Int {
-        switch segmentedTableView.selectedIndex!.source {
-        case .SegmentButtons:
-            return contents[segmentedTableView.selectedIndex!.index].count
-        case .TabButtons:
-            return tabContents[segmentedTableView.selectedIndex!.index].count
+        if segmentControl.selectedSegmentIndex == 0 {
+            switch segmentedTableView.selectedIndex!.source {
+            case .SegmentButtons:
+                return contents[segmentedTableView.selectedIndex!.index].count
+            case .TabButtons:
+                return tabContents[segmentedTableView.selectedIndex!.index].count
+            }
+        } else {
+            return 0
         }
     }
     
@@ -137,8 +134,14 @@ class ViewController: UIViewController, UISegmentedTableViewDataSource {
     
     // MARK: - IBACTIONS
     
+    @IBOutlet weak var segmentControl: UISegmentedControl!
+    @IBAction func changeSegmentControl(_ sender: Any) {
+        tableView.reloadData()
+    }
+    
     // MARK: - LIFE CYCLE
 }
+
 
 
 

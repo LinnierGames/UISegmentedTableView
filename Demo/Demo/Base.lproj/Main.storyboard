@@ -26,17 +26,31 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="WFU-n0-BwS"/>
                                 </connections>
                             </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4xw-zB-PUX">
+                                <rect key="frame" x="16" y="31" width="343" height="29"/>
+                                <segments>
+                                    <segment title="Some"/>
+                                    <segment title="None"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeSegmentControl:" destination="BYZ-38-t0r" eventType="valueChanged" id="DFg-Cm-LFr"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="ksT-1K-CIq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="909-6g-6dB"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ksT-1K-CIq" secondAttribute="bottom" constant="20" id="A42-Md-3NM"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ksT-1K-CIq" secondAttribute="trailing" constant="16" id="EwH-RN-LKu"/>
+                            <constraint firstItem="4xw-zB-PUX" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="11" id="U2z-C6-dCP"/>
                             <constraint firstItem="ksT-1K-CIq" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="78" id="Vrm-T6-Bxb"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4xw-zB-PUX" secondAttribute="trailing" constant="16" id="fJu-mm-XZi"/>
+                            <constraint firstItem="4xw-zB-PUX" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="yiq-gj-VHV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="segmentControl" destination="4xw-zB-PUX" id="ohR-a5-fCJ"/>
                         <outlet property="tableView" destination="ksT-1K-CIq" id="SJh-yr-BS0"/>
                     </connections>
                 </viewController>

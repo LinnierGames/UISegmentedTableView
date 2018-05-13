@@ -8,108 +8,6 @@
 
 import UIKit
 
-//open class UISegmentedTableViewTabViewTRASH: UIView {
-//
-//    var type: UISegmentedTableViewTabType
-//
-//    public var badgeValue: Int? = nil
-//
-//    public private(set) var icon: UIImage?
-//
-//    public private(set) var title: String?
-//
-//    public private(set) var tint: UIColor
-//
-//    fileprivate weak var delegate: UISegmentedTableViewTabViewDelegate!
-//
-//    private var bgButton: UIButton!
-//
-//    @objc public enum UISegmentedTableViewTabType: Int {
-//        case Icon
-//        case Title
-//    }
-//
-//    public init(icon: UIImage, tint: UIColor) {
-//        self.type = .Icon
-//        self.icon = icon
-//        self.tint = tint
-//        super.init(frame: CGRect.zero)
-//
-//        self.initLayout()
-//    }
-//
-//    public init(title: String, tint: UIColor) {
-//        self.type = .Title
-//        self.title = title
-//        self.tint = tint
-//        super.init(frame: CGRect.zero)
-//
-//        self.initLayout()
-//    }
-//
-//    required public init?(coder aDecoder: NSCoder) {
-//        self.type = .Icon
-//        self.tint = .black
-//        super.init(coder: aDecoder)
-//
-//        self.initLayout()
-//    }
-//
-//    private func initLayout() {
-//        switch self.type {
-//        case .Icon:
-//            let imageView = UIImageView(image: self.icon!)
-//            imageView.translatesAutoresizingMaskIntoConstraints = false
-//            let constraintHeightWidthRatio = NSLayoutConstraint(
-//                item: imageView,
-//                attribute: .height,
-//                relatedBy: .equal,
-//                toItem: imageView,
-//                attribute: .width,
-//                multiplier: 1,
-//                constant: 0
-//            )
-//            imageView.addConstraint(constraintHeightWidthRatio)
-//            constraintHeightWidthRatio.isActive = true
-//
-//            bgButton = UIButton(type: .custom)
-//            bgButton.layer.backgroundColor = UIColor.cyan.cgColor
-//
-//            bgButton.addTarget(self, action: #selector(press(_:)), for: .touchUpInside)
-//
-//            bgButton.translatesAutoresizingMaskIntoConstraints = false
-//            addSubview(bgButton)
-//
-//            bgButton.topAnchor.constraint(equalTo: topAnchor, constant: 8.0).isActive = true
-//            bgButton.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-//            bgButton.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-//            bgButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-//
-//            addSubview(imageView)
-//            imageView.topAnchor.constraint(equalTo: bgButton.topAnchor, constant: 0).isActive = true
-//            imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
-//            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4.0).isActive = true
-//            trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 4.0).isActive = true
-//
-//        case .Title:
-//            break
-//        }
-//    }
-//
-//    // MARK: - RETURN VALUES
-//
-//    // MARK: - VOID METHODS
-//
-//    // MARK: - IBACTIONS
-//
-//    @objc private func press(_ button: UIButton) {
-//        delegate.segmentedTableViewTabView(self, didSelectAt: button.tag)
-//    }
-//
-//    // MARK: - LIFE CYCLE
-//
-//}
-
 @objc public protocol UISegmentedTableViewDataSource: class {
     func numberOfSegments(in segmentedTableView: UISegmentedTableView) -> Int
     func segmentedTableView(_ segmentedTableView: UISegmentedTableView, titleFor segmentIndex: Int) -> String
@@ -126,10 +24,6 @@ import UIKit
 @objc public protocol UISegmentedTableViewDelegate: class {
     
     @objc optional func segmentedTableView(_ segmentedTableView: UISegmentedTableView, didSelectAt selectedIndex: UISegmentedTableView.UISegmentedTableViewSelectedIndex)
-    
-//    @objc optional func segmentedTableView(_ segmentedTableView: UISegmentedTableView, didSelectSegmentAt index: Int)
-//
-//    @objc optional func segmentedTableView(_ segmentedTableView: UISegmentedTableView, didSelectTabAt index: Int)
     
     @objc optional func segmentedTableView(_ segmentedTableView: UISegmentedTableView, tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     //TODO: support more methods
@@ -160,6 +54,7 @@ public class UISegmentedTableView: UIView {
         }
     }
     
+    //TODO: flat map the index values
     public private(set) var selectedIndex: UISegmentedTableViewSelectedIndex? {
         didSet {
             //TODO: make public set/get
@@ -175,13 +70,7 @@ public class UISegmentedTableView: UIView {
         }
     }
     
-    private var selectedButton: UIButton? {
-        didSet {
-//            //
-//            oldValue?.setTitleColor(self.deselectedIndexColor, for: .normal)
-//            selectedButton.setTitleColor(self.selectedIndexColor, for: .normal)
-        }
-    }
+    private var selectedButton: UIButton?
     
     public func setSelected(source: UISegmentedTableViewSelectedIndex.Source, index: Int) {
         let indexPair = UISegmentedTableViewSelectedIndex(source: source, index: index)
@@ -221,8 +110,6 @@ public class UISegmentedTableView: UIView {
         return tableView
     }()
     
-    private var segmentsScrollView = UIScrollView()
-    
     // MARK: - RETURN VALUES
     
     public override init(frame: CGRect) {
@@ -234,26 +121,100 @@ public class UISegmentedTableView: UIView {
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
+        initLayout()
         reloadData()
     }
     
     // MARK: - VOID METHODS
+    
+    private var superviewStackView: UIStackView!
+    
+    private var segmentsScrollView = UIScrollView()
+    
+    private var segmentsStackView: UIStackView!
+    
+    private var tabsStackView: UIStackView!
+    
+    private func initLayout() {
+        
+        /** vertical stack view that contains all views (table view and header stackview) */
+        superviewStackView = UIStackView(frame: bounds)
+        superviewStackView.axis = .vertical
+        
+        //layout segments
+        self.segmentsStackView = UIStackView()
+        segmentsStackView.axis = .horizontal
+        segmentsStackView.spacing = 8.0
+        segmentsStackView.distribution = .equalSpacing
+        segmentsStackView.alignment = .fill
+        segmentsStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 20.0) // compared to system font, 17
+        
+        //insert segment stack view into scroll view
+        segmentsScrollView.isScrollEnabled = true
+        segmentsScrollView.alwaysBounceHorizontal = true
+        segmentsScrollView.showsHorizontalScrollIndicator = false
+        segmentsScrollView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
+        segmentsStackView.translatesAutoresizingMaskIntoConstraints = false
+        segmentsScrollView.addSubview(segmentsStackView)
+        segmentsStackView.leadingAnchor.constraint(equalTo: segmentsScrollView.leadingAnchor).isActive = true
+        segmentsStackView.trailingAnchor.constraint(equalTo: segmentsScrollView.trailingAnchor).isActive = true
+        segmentsStackView.topAnchor.constraint(equalTo: segmentsScrollView.topAnchor).isActive = true
+        segmentsStackView.bottomAnchor.constraint(equalTo: segmentsScrollView.bottomAnchor).isActive = true
+        segmentsScrollView.heightAnchor.constraint(equalTo: segmentsStackView.heightAnchor).isActive = true
+        
+        //layout tabs
+        self.tabsStackView = UIStackView()
+        tabsStackView.axis = .horizontal
+        tabsStackView.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
+        tabsStackView.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .horizontal)
+        tabsStackView.alignment = .bottom
+        tabsStackView.distribution = .fill
+        tabsStackView.spacing = 12.0
+        
+        //layout headerStack and superview stack view
+        let headerStackView = UIStackView()
+        headerStackView.axis = .horizontal
+        headerStackView.distribution = .fill
+        
+        /** this view contains the scroll view allowing us to add a layer on top of the uiscroll view */
+        let scrollViewContainer = UIView()
+        segmentsScrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scrollViewContainer.addSubview(segmentsScrollView)
+        headerStackView.addArrangedSubview(scrollViewContainer)
+        headerStackView.addArrangedSubview(tabsStackView)
+        
+        tabsStackView.heightAnchor.constraint(equalTo: segmentsScrollView.heightAnchor, multiplier: 1).isActive = true
+        
+        headerStackView.setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .vertical)
+        
+        superviewStackView.addArrangedSubview(headerStackView)
+        
+        //bottom black bar
+        let bottomBarPath = UIBezierPath()
+        bottomBarPath.move(to: CGPoint(x: 0, y: bounds.maxY))
+        bottomBarPath.addLine(to: CGPoint(x: bounds.maxX, y: bounds.maxY))
+        let bottomBarShape = CAShapeLayer()
+        bottomBarShape.path = bottomBarPath.cgPath
+        bottomBarShape.lineWidth = 1.0
+        bottomBarShape.strokeColor = UIColor.blue.cgColor
+        
+        layer.addSublayer(bottomBarShape)
+        
+        tableView.dataSource = self.tableDataSource ?? self // allows the user to use either UITableViewDataSource or the limited supported methods in UISegmentedTableViewDataSource
+        tableView.delegate = self.tableDelegate ?? self
+    }
     
     public func reloadData() {
         guard let dataSource = self.dataSource else {
             return
         }
         
-        let superviewStackView = UIStackView(frame: bounds)
-        superviewStackView.axis = .vertical
+        //clear exsisting buttons
+        segmentsStackView.subviews.removeAllFromSuperviews()
+        tabsStackView.subviews.removeAllFromSuperviews()
         
-        //layout segments
-        let segmentStackView = UIStackView()
-        segmentStackView.axis = .horizontal
-        segmentStackView.spacing = 8.0
-        segmentStackView.distribution = .equalSpacing
-        segmentStackView.alignment = .fill
-        
+        //Add segments to stack view
         for aSegmentIndex in 0..<dataSource.numberOfSegments(in: self) {
             let segmentTitle = dataSource.segmentedTableView(self, titleFor: aSegmentIndex)
             let segmentButton = UIButton(type: .system)
@@ -273,69 +234,33 @@ public class UISegmentedTableView: UIView {
             segmentButton.tag = aSegmentIndex
             segmentButton.addTarget(self, action: #selector(pressSegment(_:)), for: .touchUpInside)
             
-            segmentStackView.addArrangedSubview(segmentButton)
+            segmentsStackView.addArrangedSubview(segmentButton)
         }
-        self.segmentButtons = segmentStackView.arrangedSubviews as! [UIButton]
+        
+        //store segment buttons
+        self.segmentButtons = segmentsStackView.arrangedSubviews as! [UIButton]
         if self.segmentButtons.count != 0 {
             self.setSelected(source: .SegmentButtons, index: 0)
         } else {
             self.selectedIndex = nil
         }
         
-        
-        //layout segments in a scroll view
-        segmentsScrollView.isScrollEnabled = true
-        segmentsScrollView.alwaysBounceHorizontal = true
-        segmentsScrollView.showsHorizontalScrollIndicator = false
-        segmentsScrollView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        
-        segmentStackView.translatesAutoresizingMaskIntoConstraints = false
-        segmentsScrollView.addSubview(segmentStackView)
-        segmentStackView.leadingAnchor.constraint(equalTo: segmentsScrollView.leadingAnchor).isActive = true
-        segmentStackView.trailingAnchor.constraint(equalTo: segmentsScrollView.trailingAnchor).isActive = true
-        segmentStackView.topAnchor.constraint(equalTo: segmentsScrollView.topAnchor).isActive = true
-        segmentStackView.bottomAnchor.constraint(equalTo: segmentsScrollView.bottomAnchor).isActive = true
-        segmentsScrollView.heightAnchor.constraint(equalTo: segmentStackView.heightAnchor).isActive = true
-        
-        //layout tabs
-        let tabsStackView = UIStackView()
-        tabsStackView.axis = .horizontal
-        tabsStackView.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        tabsStackView.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        tabsStackView.alignment = .bottom
-        tabsStackView.distribution = .fill
-        tabsStackView.spacing = 12.0
-        
+        //Add tabs to stack view
         if let nTabs = dataSource.numberOfTabs?(in: self) {
             for aTabIndex in 0..<nTabs {
                 let tab = dataSource.segmentedTableView!(self, tabFor: aTabIndex)
-                tab.addTarget(self, action: #selector(press(_:)), for: .touchUpInside)
+                tab.addTarget(self, action: #selector(pressTab(_:)), for: .touchUpInside)
                 tab.tag = aTabIndex
                 self.deselect(button: tab)
                 
                 tabsStackView.addArrangedSubview(tab)
             }
         }
+        
+        //store tab buttons
         self.tabButtons = tabsStackView.subviews as! [UISegmentedTableViewTabView]
         
-        let headerStackView = UIStackView()
-        headerStackView.axis = .horizontal
-        headerStackView.distribution = .fill
-        let scrollViewContainer = UIView()
-        segmentsScrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        scrollViewContainer.addSubview(segmentsScrollView)
-        headerStackView.addArrangedSubview(scrollViewContainer)
-        headerStackView.addArrangedSubview(tabsStackView)
-        
-//        tabsStackView.heightAnchor.constraint(equalTo: segmentsScrollView.heightAnchor, multiplier: 1).isActive = true
-        
-        headerStackView.setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .vertical)
-        
-        superviewStackView.addArrangedSubview(headerStackView)
-        
         //layout table
-        tableView.dataSource = self.tableDataSource ?? self // allows the user to use either UITableViewDataSource or the limited supported methods in UISegmentedTableViewDataSource
-        tableView.delegate = self.tableDelegate ?? self
         tableView.reloadData()
         
         superviewStackView.addArrangedSubview(tableView)
@@ -346,10 +271,6 @@ public class UISegmentedTableView: UIView {
     
     public func reloadTableView() {
         tableView.reloadData()
-    }
-    
-    private func initLayout() {
-        
     }
     
     private func select(button: UIButton) {
@@ -395,7 +316,7 @@ public class UISegmentedTableView: UIView {
         reloadTableView()
     }
     
-    @objc private func press(_ tabButton: UISegmentedTableViewTabView) {
+    @objc private func pressTab(_ tabButton: UISegmentedTableViewTabView) {
         self.setSelected(source: .TabButtons, index: tabButton.tag)
         delegate?.segmentedTableView?(self, didSelectAt: self.selectedIndex!)
         reloadTableView()
@@ -407,7 +328,7 @@ public class UISegmentedTableView: UIView {
 
 extension UISegmentedTableView: UITableViewDataSource {
     public func numberOfSections(in tableView: UITableView) -> Int {
-        return self.dataSource?.segmentedTableView?(self, numberOfSectionsIn: tableView) ?? 0
+        return self.dataSource?.segmentedTableView?(self, numberOfSectionsIn: tableView) ?? 1
     }
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -438,22 +359,9 @@ extension UIView {
     }
 }
 
-extension UIRectCorner {
-    init(topLeft: Bool, topRight: Bool, bottomLeft: Bool, bottomRight: Bool) {
-        self.init()
-        
-        if topLeft {
-            self.insert(.topLeft)
-        }
-        if topRight {
-            self.insert(.topRight)
-        }
-        if bottomLeft {
-            self.insert(.bottomLeft)
-        }
-        if bottomRight {
-            self.insert(.bottomRight)
-        }
+extension Array where Element : UIView {
+    func removeAllFromSuperviews() {
+        forEach { $0.removeFromSuperview() }
     }
 }
 
